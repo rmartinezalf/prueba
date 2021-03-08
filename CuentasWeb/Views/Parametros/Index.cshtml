@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CuentasWeb.Models.Parametros>
+
+@{
+    ViewBag.Title = "Lista";
+}
+
+<h2>Lista</h2>
+
+<p>
+    @Html.ActionLink("Adicionar nuevo parametro", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Parametro)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Valor)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Parametro)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Valor)
+        </td>
+        <td>
+            @Html.ActionLink("Modificar", "Edit", new { id=item.IdParametros }) |
+            @Html.ActionLink("Detalle", "Details", new { id=item.IdParametros }) |
+            @Html.ActionLink("Borrar", "Delete", new { id=item.IdParametros })
+        </td>
+    </tr>
+}
+
+</table>

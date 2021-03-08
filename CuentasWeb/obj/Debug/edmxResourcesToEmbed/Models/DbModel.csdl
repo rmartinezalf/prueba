@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="cuentasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Cliente">
+    <Key>
+      <PropertyRef Name="IdCliente" />
+    </Key>
+    <Property Name="IdCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombreCliente" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Cuentas" Relationship="Self.FK_Cuentas_Cliente" FromRole="Cliente" ToRole="Cuentas" />
+  </EntityType>
+  <EntityType Name="Cuentas">
+    <Key>
+      <PropertyRef Name="IdCuenta" />
+    </Key>
+    <Property Name="IdCuenta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombreCta" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Excento" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="Banco" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="IdCliente" Type="Int32" />
+    <Property Name="Saldo" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="Cliente" Relationship="Self.FK_Cuentas_Cliente" FromRole="Cuentas" ToRole="Cliente" />
+    <NavigationProperty Name="Movimientos" Relationship="Self.FK_Movimientos_Cuentas" FromRole="Cuentas" ToRole="Movimientos" />
+  </EntityType>
+  <EntityType Name="Movimientos">
+    <Key>
+      <PropertyRef Name="IdMovimiento" />
+    </Key>
+    <Property Name="IdMovimiento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdCuenta" Type="Int32" Nullable="false" />
+    <Property Name="Fecha" Type="DateTime" Precision="3" />
+    <Property Name="ValorRetiro" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ValorGmf" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="SaldoMov" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="CuentaDestino" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="TipoTransaccion" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Cuentas" Relationship="Self.FK_Movimientos_Cuentas" FromRole="Movimientos" ToRole="Cuentas" />
+  </EntityType>
+  <EntityType Name="Parametros">
+    <Key>
+      <PropertyRef Name="IdParametros" />
+    </Key>
+    <Property Name="IdParametros" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Parametro" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Valor" Type="Decimal" Precision="19" Scale="4" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Cuentas_Cliente">
+    <End Role="Cliente" Type="Self.Cliente" Multiplicity="0..1" />
+    <End Role="Cuentas" Type="Self.Cuentas" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cliente">
+        <PropertyRef Name="IdCliente" />
+      </Principal>
+      <Dependent Role="Cuentas">
+        <PropertyRef Name="IdCliente" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Movimientos_Cuentas">
+    <End Role="Cuentas" Type="Self.Cuentas" Multiplicity="1" />
+    <End Role="Movimientos" Type="Self.Movimientos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cuentas">
+        <PropertyRef Name="IdCuenta" />
+      </Principal>
+      <Dependent Role="Movimientos">
+        <PropertyRef Name="IdCuenta" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DbContext1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Cliente" EntityType="Self.Cliente" />
+    <EntitySet Name="Cuentas" EntityType="Self.Cuentas" />
+    <EntitySet Name="Movimientos" EntityType="Self.Movimientos" />
+    <EntitySet Name="Parametros" EntityType="Self.Parametros" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <AssociationSet Name="FK_Cuentas_Cliente" Association="Self.FK_Cuentas_Cliente">
+      <End Role="Cliente" EntitySet="Cliente" />
+      <End Role="Cuentas" EntitySet="Cuentas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Movimientos_Cuentas" Association="Self.FK_Movimientos_Cuentas">
+      <End Role="Cuentas" EntitySet="Cuentas" />
+      <End Role="Movimientos" EntitySet="Movimientos" />
+    </AssociationSet>
+    <FunctionImport Name="calculoSaldo" ReturnType="Collection(cuentasModel.calculoSaldo_Result)">
+      <Parameter Name="IdCta" Mode="In" Type="Int32" />
+      <Parameter Name="valorRetiro" Mode="In" Type="Decimal" />
+      <Parameter Name="cuentaDestino" Mode="In" Type="String" />
+      <Parameter Name="tipoTransaccion" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="calculoSaldo_Result">
+    <Property Type="Int32" Name="Column1" Nullable="true" />
+    <Property Type="Decimal" Name="Column2" Nullable="true" Precision="19" />
+    <Property Type="String" Name="Column3" Nullable="true" MaxLength="2" />
+  </ComplexType>
+</Schema>

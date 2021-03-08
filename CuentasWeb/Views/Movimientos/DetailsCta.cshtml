@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CuentasWeb.Models.Movimientos>
+
+@{
+    ViewBag.Title = "DetailsCta";
+}
+
+<h2>DetailsCta</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValorRetiro)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValorGmf)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SaldoMov)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CuentaDestino)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoTransaccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cuentas.NombreCta)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ValorRetiro)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ValorGmf)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SaldoMov)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CuentaDestino)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoTransaccion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cuentas.NombreCta)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdMovimiento }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdMovimiento }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdMovimiento })
+        </td>
+    </tr>
+}
+
+</table>
